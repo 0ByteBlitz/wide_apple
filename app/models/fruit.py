@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, Float, ForeignKey, Table
+from sqlalchemy import Column, Integer, String, Float, ForeignKey
 from sqlalchemy.orm import relationship, backref
 from app.database import Base
 
@@ -20,11 +20,4 @@ class Fruit(Base):
     flavor_profile = Column(String)
     dimension_origin = Column(String)
     rarity_level = Column(Integer)
-    base_value = Column(Float)
-
-class Vendor(Base):
-    __tablename__ = "vendors"
-    id = Column(Integer, primary_key=True)
-    name = Column(String, unique=True, index=True)
-    species = Column(String)
-    home_dimension = Column(String)
+    base_value = Column(Float) 

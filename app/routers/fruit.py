@@ -3,7 +3,7 @@ from fastapi.responses import JSONResponse
 from sqlalchemy.orm import Session
 from app.database import session_local
 from app.crud import get_all_fruits, get_price_trend
-from app.schemas import FruitSchema
+from app.schemas.fruit import FruitSchema
 from typing import List
 
 router = APIRouter()

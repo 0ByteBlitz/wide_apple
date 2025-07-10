@@ -1,14 +1,5 @@
-import random
-
 from sqlalchemy.orm import Session
-from app.models import Fruit, Vendor, VendorInventory
-from datetime import datetime, timedelta
-
-def get_all_fruits(db: Session):
-    return db.query(Fruit).all()
-
-def get_all_vendors(db: Session):
-    return db.query(Vendor).all()
+from app.models.fruit import VendorInventory, Fruit
 
 def perform_trade(db: Session, from_id: int, to_id: int, fruit_id: int, quantity: int):
     from_inv = db.query(VendorInventory).filter_by(vendor_id=from_id, fruit_id=fruit_id).first()
@@ -27,6 +18,8 @@ def perform_trade(db: Session, from_id: int, to_id: int, fruit_id: int, quantity
 
     # calculate tax based on rarity level
     fruit = db.query(Fruit).filter_by(id=fruit_id).first()
+    if fruit is None:
+        raise ValueError("Fruit not found")
     tax = (fruit.base_value * quantity) * (fruit.rarity_level / 10.0)
     total_cost = (fruit.base_value * quantity) + tax
 
@@ -37,21 +30,4 @@ def perform_trade(db: Session, from_id: int, to_id: int, fruit_id: int, quantity
         "base_value": fruit.base_value,
         "tax": tax,
         "total_cost": total_cost
-    }
-
-def get_price_trend(db: Session, fruit_name: str):
-    fruit = db.query(Fruit).filter_by(name=fruit_name).first()
-    if not fruit:
-        return None
-
-    base = fruit.base_value
-    today = datetime.today()
-    days = [today - timedelta(days=i) for i in range(6, -1, -1)]
-
-    prices = []
-    for day in days:
-        fluctuation = random.uniform(-0.2, 0.2)  # ±20%
-        price = round(base + base * fluctuation, 2)
-        prices.append({"date": day.strftime("%Y-%m-%d"), "price": price})
-
-    return {"fruit": fruit_name, "base_value": base, "trend": prices}
+    } 

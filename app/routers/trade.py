@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 from app.database import session_local
-from app.schemas import TradeRequest
+from app.schemas.trade import TradeRequest
 from app.crud import perform_trade
 
 router = APIRouter()

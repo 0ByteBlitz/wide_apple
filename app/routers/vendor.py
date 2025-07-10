@@ -2,7 +2,7 @@ from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
 from app.database import session_local
 from app.crud import get_all_vendors
-from app.schemas import VendorSchema
+from app.schemas.vendor import VendorSchema
 from typing import List
 
 router = APIRouter()

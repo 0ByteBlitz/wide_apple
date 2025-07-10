@@ -18,20 +18,4 @@ class VendorInventorySchema(BaseModel):
     fruit: FruitSchema
 
     class Config:
-        orm_mode = True
-
-class VendorSchema(BaseModel):
-    id: int
-    name: str
-    species: str
-    home_dimension: str
-    inventory_items: List[VendorInventorySchema]
-
-    class Config:
-        orm_mode = True
-
-class TradeRequest(BaseModel):
-    from_vendor_id: int
-    to_vendor_id: int
-    fruit_id: int
-    quantity: int
+        orm_mode = True 
