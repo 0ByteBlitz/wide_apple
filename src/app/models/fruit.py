@@ -1,6 +1,6 @@
 from sqlalchemy import Column, Integer, String, Float, ForeignKey
 from sqlalchemy.orm import relationship, backref
-from app.database import Base
+from src.app.database import Base
 
 class VendorInventory(Base):
     __tablename__ = "vendor_inventory"
@@ -20,4 +20,13 @@ class Fruit(Base):
     flavor_profile = Column(String)
     dimension_origin = Column(String)
     rarity_level = Column(Integer)
-    base_value = Column(Float) 
+    base_value = Column(Float)
+
+class FruitPrice(Base):
+    __tablename__ = "fruit_prices"
+    id = Column(Integer, primary_key=True)
+    fruit_id = Column(Integer, ForeignKey("fruits.id"), nullable=False)
+    date = Column(String, nullable=False)  # ISO date string (YYYY-MM-DD)
+    price = Column(Float, nullable=False)
+
+    fruit = relationship("Fruit", backref=backref("historical_prices", cascade="all, delete-orphan")) 

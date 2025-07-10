@@ -6,6 +6,7 @@ readme = "README.md"
 requires-python = ">=3.13"
 dependencies = [
     "alembic>=1.16.3",
+    "apscheduler>=3.11.0",
     "dotenv>=0.9.9",
     "fastapi[standard]>=0.116.0",
     "httpx>=0.28.1",
@@ -15,3 +16,7 @@ dependencies = [
     "sqlalchemy>=2.0.41",
     "uvicorn>=0.35.0",
 ]
+
+[tool.setuptools]
+package-dir = {"" = "src"}
+packages = ["app"]

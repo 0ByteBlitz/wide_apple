@@ -1,8 +1,9 @@
 from sqlalchemy.orm import Session
-from app.models.fruit import Fruit
+from src.app.models.fruit import Fruit, FruitPrice
 from datetime import datetime, timedelta
 import random
 from typing import Optional, List
+from sqlalchemy import and_
 
 def get_all_fruits(db: Session, rarity_level: Optional[int] = None, offset: int = 0, limit: int = 10) -> List[Fruit]:
     query = db.query(Fruit)
@@ -25,4 +26,17 @@ def get_price_trend(db: Session, fruit_name: str):
         price = round(base + base * fluctuation, 2)
         prices.append({"date": day.strftime("%Y-%m-%d"), "price": price})
 
-    return {"fruit": fruit_name, "base_value": base, "trend": prices} 
+    return {"fruit": fruit_name, "base_value": base, "trend": prices}
+
+def get_historical_prices(db: Session, fruit_id: Optional[int] = None, start_date: Optional[str] = None, end_date: Optional[str] = None, limit: Optional[int] = None):
+    query = db.query(FruitPrice)
+    if fruit_id is not None:
+        query = query.filter(FruitPrice.fruit_id == fruit_id)
+    if start_date is not None:
+        query = query.filter(FruitPrice.date >= start_date)
+    if end_date is not None:
+        query = query.filter(FruitPrice.date <= end_date)
+    query = query.order_by(FruitPrice.date.desc())
+    if limit is not None:
+        query = query.limit(limit)
+    return query.all() 

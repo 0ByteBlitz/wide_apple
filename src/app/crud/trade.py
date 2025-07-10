@@ -1,5 +1,5 @@
 from sqlalchemy.orm import Session
-from app.models.fruit import VendorInventory, Fruit
+from src.app.models.fruit import VendorInventory, Fruit
 
 def perform_trade(db: Session, from_id: int, to_id: int, fruit_id: int, quantity: int):
     from_inv = db.query(VendorInventory).filter_by(vendor_id=from_id, fruit_id=fruit_id).first()

@@ -1,7 +1,7 @@
 import json
 from sqlalchemy.orm import Session
-from app.models import Fruit, Vendor, VendorInventory
-from app.database import session_local, engine, Base
+from src.app.models import Fruit, Vendor, VendorInventory
+from src.app.database import session_local, engine, Base
 
 # Ensure all tables exist
 Base.metadata.create_all(bind=engine)

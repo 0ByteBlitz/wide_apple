@@ -19,3 +19,15 @@ class VendorInventorySchema(BaseModel):
 
     class Config:
         from_attributes = True 
+
+class FruitPriceSchema(BaseModel):
+    id: int
+    fruit_id: int
+    date: str  # ISO date string (YYYY-MM-DD)
+    price: float
+
+    class Config:
+        from_attributes = True
+
+class FruitPriceListSchema(BaseModel):
+    prices: List[FruitPriceSchema] 
