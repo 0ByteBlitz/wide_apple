@@ -10,4 +10,4 @@ class VendorSchema(BaseModel):
     inventory_items: List[VendorInventorySchema]
 
     class Config:
-        orm_mode = True 
+        from_attributes = True

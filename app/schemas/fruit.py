@@ -10,7 +10,7 @@ class FruitSchema(BaseModel):
     base_value: float
 
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 class VendorInventorySchema(BaseModel):
     fruit_id: int
@@ -18,4 +18,4 @@ class VendorInventorySchema(BaseModel):
     fruit: FruitSchema
 
     class Config:
-        orm_mode = True 
+        from_attributes = True 
