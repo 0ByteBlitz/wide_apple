@@ -1,10 +1,13 @@
-from fastapi import APIRouter, Depends, Query
+from fastapi import APIRouter, Depends, Query, File, UploadFile, Form
 from fastapi.responses import JSONResponse
 from sqlalchemy.orm import Session
 from src.app.database import session_local
 from src.app.crud.fruit import get_all_fruits, get_price_trend, get_historical_prices
 from src.app.schemas.fruit import FruitSchema, FruitPriceSchema, FruitPriceListSchema
 from typing import List, Optional
+import os
+from uuid import uuid4
+from src.app.models.fruit import Fruit
 
 router = APIRouter()
 
@@ -35,6 +38,38 @@ def read_fruits(
 ):
     offset = (page - 1) * limit
     return get_all_fruits(db, rarity_level=rarity, offset=offset, limit=limit)
+
+@router.post("/fruits")
+async def create_fruit(
+    name: str = Form(...),
+    flavor_profile: str = Form(...),
+    dimension_origin: str = Form(...),
+    rarity_level: int = Form(...),
+    base_value: float = Form(...),
+    photo: UploadFile = File(None),
+    db: Session = Depends(get_db)
+):
+    photo_url = None
+    if photo:
+        ext = os.path.splitext(photo.filename)[1]
+        filename = f"{uuid4().hex}{ext}"
+        save_path = os.path.join("static/fruits", filename)
+        os.makedirs(os.path.dirname(save_path), exist_ok=True)
+        with open(save_path, "wb") as f:
+            f.write(await photo.read())
+        photo_url = f"/static/fruits/{filename}"
+    fruit = Fruit(
+        name=name,
+        flavor_profile=flavor_profile,
+        dimension_origin=dimension_origin,
+        rarity_level=rarity_level,
+        base_value=base_value,
+        photo_url=photo_url
+    )
+    db.add(fruit)
+    db.commit()
+    db.refresh(fruit)
+    return {"id": fruit.id}
 
 @router.get(
     "/prices",

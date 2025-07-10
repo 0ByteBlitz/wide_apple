@@ -21,6 +21,7 @@ class Fruit(Base):
     dimension_origin = Column(String)
     rarity_level = Column(Integer)
     base_value = Column(Float)
+    photo_url = Column(String, nullable=True)
 
 class FruitPrice(Base):
     __tablename__ = "fruit_prices"

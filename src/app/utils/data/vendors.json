@@ -1,0 +1,29 @@
+[
+  {
+    "name": "Vendor Test",
+    "species": "Human",
+    "home_dimension": "Earth-1",
+    "inventory": [
+      {"fruit": "Galactic Apple", "quantity": 10},
+      {"fruit": "Nebula Berry", "quantity": 5}
+    ]
+  },
+  {
+    "name": "Zorg the Trader",
+    "species": "Zorgonian",
+    "home_dimension": "Nebulon-7",
+    "inventory": [
+      {"fruit": "Quantum Pear", "quantity": 7},
+      {"fruit": "Void Grape", "quantity": 2}
+    ]
+  },
+  {
+    "name": "Plasma Pete",
+    "species": "Plasmite",
+    "home_dimension": "Plasmora-2",
+    "inventory": [
+      {"fruit": "Plasma Plum", "quantity": 12},
+      {"fruit": "Galactic Apple", "quantity": 3}
+    ]
+  }
+] 

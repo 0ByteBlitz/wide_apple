@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, HTTPException, Query
+from fastapi import APIRouter, Depends, HTTPException, Query, Body
 from sqlalchemy.orm import Session
 from fastapi.security import OAuth2PasswordBearer
 from src.app.database import session_local
@@ -8,6 +8,7 @@ from src.app.models.user import User
 from src.app.models.vendor import Vendor
 from src.app.auth import decode_token
 from typing import List, Optional
+from src.app.models.fruit import VendorInventory
 
 router = APIRouter()
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="auth/token")
@@ -65,3 +66,23 @@ def read_my_vendor(db: Session = Depends(get_db), current_user: User = Depends(g
     if not vendor:
         raise HTTPException(status_code=404, detail="Vendor profile not found")
     return vendor
+
+@router.post("/vendors/me/add-fruit")
+def add_fruit_to_inventory(
+    data: dict = Body(...),
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user)
+):
+    fruit_id = data["fruit_id"]
+    quantity = data["quantity"]
+    vendor = db.query(Vendor).filter_by(user_id=current_user.id).first()
+    if not vendor:
+        raise HTTPException(status_code=404, detail="Vendor not found")
+    inv = db.query(VendorInventory).filter_by(vendor_id=vendor.id, fruit_id=fruit_id).first()
+    if inv:
+        inv.quantity += int(quantity)
+    else:
+        inv = VendorInventory(vendor_id=vendor.id, fruit_id=fruit_id, quantity=quantity)
+        db.add(inv)
+    db.commit()
+    return {"success": True}

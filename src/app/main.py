@@ -1,7 +1,11 @@
 import sys
 import unittest
 import os
+
+from dotenv import load_dotenv
 from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
+from fastapi.staticfiles import StaticFiles
 from src.app.database import Base, engine
 from src.app.routers import fruit, vendor, trade, auth
 from apscheduler.schedulers.background import BackgroundScheduler
@@ -11,7 +15,23 @@ from src.app.models.fruit import Fruit, FruitPrice
 from src.app.database import session_local
 import random
 
+load_dotenv()
+
+FRONTEND_URL = os.getenv("FRONTEND_URL")
+if FRONTEND_URL is None:
+    FRONTEND_URL = ""
+
 app = FastAPI()
+
+app.mount("/static", StaticFiles(directory="static"), name="static")
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=[FRONTEND_URL],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 Base.metadata.create_all(bind=engine)
 

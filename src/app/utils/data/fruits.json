@@ -1,0 +1,37 @@
+[
+  {
+    "name": "Galactic Apple",
+    "flavor_profile": ["sweet", "crisp"],
+    "dimension_origin": "Earth-1",
+    "rarity_level": 1,
+    "base_value": 10.5
+  },
+  {
+    "name": "Nebula Berry",
+    "flavor_profile": ["tart", "juicy"],
+    "dimension_origin": "Nebulon-7",
+    "rarity_level": 2,
+    "base_value": 18.0
+  },
+  {
+    "name": "Quantum Pear",
+    "flavor_profile": ["smooth", "mellow"],
+    "dimension_origin": "Quasar-3",
+    "rarity_level": 3,
+    "base_value": 25.0
+  },
+  {
+    "name": "Plasma Plum",
+    "flavor_profile": ["zesty", "rich"],
+    "dimension_origin": "Plasmora-2",
+    "rarity_level": 1,
+    "base_value": 12.0
+  },
+  {
+    "name": "Void Grape",
+    "flavor_profile": ["bold", "mysterious"],
+    "dimension_origin": "Void-Prime",
+    "rarity_level": 4,
+    "base_value": 40.0
+  }
+] 
