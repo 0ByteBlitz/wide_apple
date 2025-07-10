@@ -1,0 +1,20 @@
+[
+    {
+      "name": "Zarnok the Fruitarian",
+      "species": "Kleeb",
+      "home_dimension": "Zeta-9",
+      "inventory": [
+        { "fruit": "Grappleberry", "quantity": 30 },
+        { "fruit": "Voidmelon", "quantity": 5 }
+      ]
+    },
+    {
+      "name": "Xena Prime",
+      "species": "Human",
+      "home_dimension": "Earth-1",
+      "inventory": [
+        { "fruit": "Voidmelon", "quantity": 2 }
+      ]
+    }
+  ]
+  

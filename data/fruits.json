@@ -1,0 +1,17 @@
+[
+    {
+      "name": "Grappleberry",
+      "flavor_profile": ["sweet", "tangy", "crunchy"],
+      "dimension_origin": "Zeta-9",
+      "rarity_level": 4,
+      "base_value": 12.5
+    },
+    {
+      "name": "Voidmelon",
+      "flavor_profile": ["bitter", "voidlike"],
+      "dimension_origin": "Nullverse",
+      "rarity_level": 5,
+      "base_value": 20.0
+    }
+  ]
+  
