@@ -2,9 +2,13 @@ from sqlalchemy.orm import Session
 from app.models.fruit import Fruit
 from datetime import datetime, timedelta
 import random
+from typing import Optional, List
 
-def get_all_fruits(db: Session):
-    return db.query(Fruit).all()
+def get_all_fruits(db: Session, rarity_level: Optional[int] = None, offset: int = 0, limit: int = 10) -> List[Fruit]:
+    query = db.query(Fruit)
+    if rarity_level is not None:
+        query = query.filter(Fruit.rarity_level == rarity_level)
+    return query.offset(offset).limit(limit).all()
 
 def get_price_trend(db: Session, fruit_name: str):
     fruit = db.query(Fruit).filter_by(name=fruit_name).first()

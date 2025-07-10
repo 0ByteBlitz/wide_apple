@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends, HTTPException, Query
 from sqlalchemy.orm import Session
 from fastapi.security import OAuth2PasswordBearer
 from app.database import session_local
@@ -7,7 +7,7 @@ from app.schemas.vendor import VendorSchema
 from app.models.user import User
 from app.models.vendor import Vendor
 from app.auth import decode_token
-from typing import List
+from typing import List, Optional
 
 router = APIRouter()
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="auth/token")
@@ -29,8 +29,14 @@ def get_current_user(token: str = Depends(oauth2_scheme), db: Session = Depends(
     return user
 
 @router.get("/vendors", response_model=List[VendorSchema])
-def read_vendors(db: Session = Depends(get_db)):
-    return get_all_vendors(db)
+def read_vendors(
+    db: Session = Depends(get_db),
+    page: int = Query(1, ge=1, description="Page number"),
+    limit: int = Query(10, ge=1, le=100, description="Items per page"),
+    species: Optional[str] = Query(None, description="Filter by species")
+):
+    offset = (page - 1) * limit
+    return get_all_vendors(db, species=species, offset=offset, limit=limit)
 
 @router.get("/vendors/me", response_model=VendorSchema)
 def read_my_vendor(db: Session = Depends(get_db), current_user: User = Depends(get_current_user)):

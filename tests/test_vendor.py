@@ -23,5 +23,16 @@ class TestVendorEndpoints(unittest.TestCase):
         self.assertIn("id", response.json())
         self.assertIn("name", response.json())
 
+    def test_vendors_pagination(self):
+        response = client.get("/vendors?page=1&limit=2")
+        self.assertEqual(response.status_code, 200)
+        self.assertIsInstance(response.json(), list)
+
+    def test_vendors_filtering(self):
+        # This will pass if at least one vendor with species='Human' exists, otherwise should return an empty list
+        response = client.get("/vendors?species=Human")
+        self.assertEqual(response.status_code, 200)
+        self.assertIsInstance(response.json(), list)
+
 if __name__ == "__main__":
     unittest.main(verbosity=2)
