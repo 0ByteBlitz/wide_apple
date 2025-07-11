@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Depends, Query, File, UploadFile, Form
 from fastapi.responses import JSONResponse
 from sqlalchemy.orm import Session
-from src.app.database import session_local
+from src.app.database import get_db
 from src.app.crud.fruit import get_all_fruits, get_price_trend, get_historical_prices
 from src.app.schemas.fruit import FruitSchema, FruitPriceSchema, FruitPriceListSchema
 from typing import List, Optional
@@ -10,13 +10,6 @@ from uuid import uuid4
 from src.app.models.fruit import Fruit
 
 router = APIRouter()
-
-def get_db():
-    db = session_local()
-    try:
-        yield db
-    finally:
-        db.close()
 
 
 @router.get(

@@ -1,8 +1,8 @@
 from fastapi import APIRouter, Depends, HTTPException, Query, Body
 from sqlalchemy.orm import Session
 from fastapi.security import OAuth2PasswordBearer
-from src.app.database import session_local
-from src.app.crud.vendor import get_all_vendors
+from src.app.database import get_db
+from src.app.crud.vendor import get_all_vendors, get_popular_vendors
 from src.app.schemas.vendor import VendorSchema
 from src.app.models.user import User
 from src.app.models.vendor import Vendor
@@ -12,13 +12,6 @@ from src.app.models.fruit import VendorInventory
 
 router = APIRouter()
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="auth/token")
-
-def get_db():
-    db = session_local()
-    try:
-        yield db
-    finally:
-        db.close()
 
 def get_current_user(token: str = Depends(oauth2_scheme), db: Session = Depends(get_db)):
     token_data = decode_token(token)
@@ -66,6 +59,23 @@ def read_my_vendor(db: Session = Depends(get_db), current_user: User = Depends(g
     if not vendor:
         raise HTTPException(status_code=404, detail="Vendor profile not found")
     return vendor
+
+@router.get(
+    "/vendors/popular",
+    response_model=List[VendorSchema],
+    summary="List Popular Vendors",
+    description="Get a list of the most popular vendors, ranked by the sum of (quantity * rarity_level) of all their fruits.",
+    tags=["Vendor"],
+    responses={
+        200: {"description": "A list of popular vendors."}
+    },
+    response_description="A list of popular vendors."
+)
+def read_popular_vendors(
+    db: Session = Depends(get_db),
+    limit: int = Query(5, ge=1, le=20, description="Number of popular vendors to return", example=5)
+):
+    return get_popular_vendors(db, limit=limit)
 
 @router.post("/vendors/me/add-fruit")
 def add_fruit_to_inventory(

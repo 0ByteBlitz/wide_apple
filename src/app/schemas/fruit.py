@@ -1,5 +1,5 @@
 from pydantic import BaseModel
-from typing import List
+from typing import List, Optional
 
 class FruitSchema(BaseModel):
     id: int
@@ -8,6 +8,7 @@ class FruitSchema(BaseModel):
     dimension_origin: str
     rarity_level: int
     base_value: float
+    photo_url: Optional[str] = None
 
     class Config:
         from_attributes = True

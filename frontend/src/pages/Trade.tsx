@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { fetchWithAuth } from '../utils/tokenUtils'
 
 const fruitImages = [
     'fruit_0_0.png', 'fruit_0_1.png', 'fruit_0_2.png', 'fruit_0_3.png',
@@ -24,9 +25,7 @@ const Trade = () => {
             navigate('/login')
             return
         }
-        fetch('http://localhost:8000/vendors/me', {
-            headers: { Authorization: `Bearer ${token}` },
-        })
+        fetchWithAuth('http://localhost:8000/vendors/me')
             .then(res => res.ok ? res.json() : Promise.reject())
             .then(data => {
                 setVendor(data)
@@ -44,11 +43,10 @@ const Trade = () => {
             return
         }
         try {
-            const res = await fetch('http://localhost:8000/trade', {
+            const res = await fetchWithAuth('http://localhost:8000/trade', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
-                    Authorization: `Bearer ${token}`,
                 },
                 body: JSON.stringify({
                     from_vendor_id: vendor.id,

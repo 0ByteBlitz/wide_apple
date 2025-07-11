@@ -1,6 +1,7 @@
 import { Link, useNavigate, useLocation } from 'react-router-dom'
 import { useEffect, useState } from 'react'
 import logo from '../assets/wide_apple_logo.png'
+import { fetchWithAuth } from '../utils/tokenUtils'
 
 const USER_ICON = (
     <span className="inline-block w-8 h-8 rounded-full bg-gradient-to-br from-pink-400 via-yellow-300 to-green-400 flex items-center justify-center text-white font-bold text-xl shadow">👽</span>
@@ -17,11 +18,7 @@ const NavBar = () => {
         setIsLoggedIn(!!localStorage.getItem('access_token'))
         setMenuOpen(false)
         if (localStorage.getItem('access_token')) {
-            fetch('http://localhost:8000/auth/me', {
-                headers: {
-                    Authorization: `Bearer ${localStorage.getItem('access_token')}`,
-                },
-            })
+            fetchWithAuth('http://localhost:8000/auth/me')
                 .then(res => res.ok ? res.json() : null)
                 .then(data => setUsername(data?.username || ''))
                 .catch(() => setUsername(''))

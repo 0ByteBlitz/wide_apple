@@ -2,22 +2,15 @@ from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 
-from src.app.database import session_local
+from src.app.database import get_db
 from src.app.schemas.user import UserCreate, UserOut
 from src.app.schemas.auth import Token
 from src.app.crud.user import get_user_by_username, create_user
-from src.app.auth import verify_password, create_access_token, decode_token, create_refresh_token, decode_refresh_token
+from src.app.auth import verify_password, create_access_token, decode_token, create_refresh_token, decode_refresh_token, validate_password
 from src.app.models.vendor import Vendor
 
 router = APIRouter()
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="auth/token")
-
-def get_db():
-    db = session_local()
-    try:
-        yield db
-    finally:
-        db.close()
 
 @router.post(
     "/auth/register",
@@ -34,10 +27,12 @@ def get_db():
 def register(user: UserCreate, db: Session = Depends(get_db)):
     if get_user_by_username(db, user.username):
         raise HTTPException(status_code=400, detail="Username already exists")
-
+    try:
+        validate_password(user.password)
+    except ValueError as e:
+        raise HTTPException(status_code=400, detail=str(e))
     # Create user
     db_user = create_user(db, user.username, user.password)
-
     # Auto-create vendor for the user
     new_vendor = Vendor(
         name=f"Vendor {user.username}",
@@ -47,7 +42,6 @@ def register(user: UserCreate, db: Session = Depends(get_db)):
     )
     db.add(new_vendor)
     db.commit()
-
     return db_user
 
 @router.post(

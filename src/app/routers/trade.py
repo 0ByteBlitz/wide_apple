@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
 from fastapi.security import OAuth2PasswordBearer
-from src.app.database import session_local
+from src.app.database import get_db
 from src.app.schemas.trade import TradeRequest
 from src.app.crud.trade import perform_trade
 from src.app.models.user import User
@@ -10,13 +10,6 @@ from src.app.auth import decode_token
 
 router = APIRouter()
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="auth/token")
-
-def get_db():
-    db = session_local()
-    try:
-        yield db
-    finally:
-        db.close()
 
 def get_current_user(token: str = Depends(oauth2_scheme), db: Session = Depends(get_db)):
     token_data = decode_token(token)
