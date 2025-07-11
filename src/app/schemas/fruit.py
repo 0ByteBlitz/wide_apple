@@ -1,5 +1,6 @@
-from pydantic import BaseModel
 from typing import List, Optional
+
+from pydantic import BaseModel
 
 class FruitSchema(BaseModel):
     id: int
@@ -19,7 +20,7 @@ class VendorInventorySchema(BaseModel):
     fruit: FruitSchema
 
     class Config:
-        from_attributes = True 
+        from_attributes = True
 
 class FruitPriceSchema(BaseModel):
     id: int

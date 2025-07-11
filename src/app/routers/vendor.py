@@ -1,14 +1,16 @@
-from fastapi import APIRouter, Depends, HTTPException, Query, Body
-from sqlalchemy.orm import Session
+from typing import List, Optional
+
+from fastapi import APIRouter, Body, Depends, HTTPException, Query
 from fastapi.security import OAuth2PasswordBearer
-from src.app.database import get_db
+from sqlalchemy.orm import Session
+
+from src.app.auth import decode_token
 from src.app.crud.vendor import get_all_vendors, get_popular_vendors
-from src.app.schemas.vendor import VendorSchema
+from src.app.database import get_db
+from src.app.models.fruit import VendorInventory
 from src.app.models.user import User
 from src.app.models.vendor import Vendor
-from src.app.auth import decode_token
-from typing import List, Optional
-from src.app.models.fruit import VendorInventory
+from src.app.schemas.vendor import VendorSchema
 
 router = APIRouter()
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="auth/token")

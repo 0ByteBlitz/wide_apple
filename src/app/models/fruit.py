@@ -1,5 +1,6 @@
-from sqlalchemy import Column, Integer, String, Float, ForeignKey
-from sqlalchemy.orm import relationship, backref
+from sqlalchemy import Column, Float, ForeignKey, Integer, String
+from sqlalchemy.orm import backref, relationship
+
 from src.app.database import Base
 
 class VendorInventory(Base):

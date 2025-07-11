@@ -1,7 +1,9 @@
 import { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, Link } from 'react-router-dom'
 import axios from 'axios'
-import AuthFormContainer from './AuthFormContainer'
+import AuthFormContainer from './common/AuthFormContainer'
+import loginBg from '../assets/wideapple_login_bg.png'
+import { BACKEND_URL } from '../constants';
 
 const LoginForm = () => {
     const [username, setUsername] = useState('')
@@ -17,7 +19,7 @@ const LoginForm = () => {
             params.append('username', username)
             params.append('password', password)
             const res = await axios.post('/auth/token', params, {
-                baseURL: 'http://localhost:8000',
+                baseURL: BACKEND_URL,
                 headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
             })
             localStorage.setItem('access_token', res.data.access_token)
@@ -31,7 +33,8 @@ const LoginForm = () => {
     return (
         <AuthFormContainer
             title="Login"
-            footer={<span>Don&apos;t have an account? <a href="/register" className="font-bold bg-gradient-to-r from-yellow-400 via-orange-500 to-red-500 bg-clip-text text-transparent hover:underline">Register</a></span>}
+            footer={<span>Don&apos;t have an account? <Link to="/register" className="font-bold bg-gradient-to-r from-yellow-400 via-orange-500 to-red-500 bg-clip-text text-transparent hover:underline">Register</Link></span>}
+            bgImage={loginBg}
         >
             <form onSubmit={handleSubmit} className="w-full flex flex-col items-center">
                 {error && <div className="text-red-500 mb-4 font-semibold">{error}</div>}

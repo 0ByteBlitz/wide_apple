@@ -1,19 +1,20 @@
+import os
+import random
 import sys
 import unittest
-import os
+from datetime import datetime
+from pathlib import Path
 
+from apscheduler.schedulers.background import BackgroundScheduler
 from dotenv import load_dotenv
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
-from src.app.database import Base, engine
-from src.app.routers import fruit, vendor, trade, auth
-from apscheduler.schedulers.background import BackgroundScheduler
 from sqlalchemy.orm import Session
-from datetime import datetime
+
+from src.app.database import Base, engine, session_local
 from src.app.models.fruit import Fruit, FruitPrice
-from src.app.database import session_local
-import random
+from src.app.routers import auth, fruit, trade, vendor
 
 load_dotenv()
 
@@ -21,9 +22,11 @@ FRONTEND_URL = os.getenv("FRONTEND_URL")
 if FRONTEND_URL is None:
     FRONTEND_URL = ""
 
+BASE_DIR = Path(__file__).resolve().parent
+
 app = FastAPI()
 
-app.mount("/static", StaticFiles(directory="static"), name="static")
+app.mount("/static", StaticFiles(directory=BASE_DIR / "static"), name="static")
 
 app.add_middleware(
     CORSMiddleware,
@@ -42,7 +45,7 @@ app.include_router(auth.router)
 
 @app.get("/")
 def read_root():
-    return{"message": "Welcome to WideApple Interdimensional API"}
+    return {"message": "Welcome to WideApple Interdimensional API"}
 
 def simulate_and_store_daily_prices():
     db: Session = session_local()

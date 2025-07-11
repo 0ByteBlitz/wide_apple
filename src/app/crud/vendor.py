@@ -1,8 +1,10 @@
+from typing import List, Optional
+
 from sqlalchemy.orm import Session
-from src.app.models.vendor import Vendor
-from typing import Optional, List
-from src.app.models.fruit import VendorInventory, Fruit
 from sqlalchemy.sql import func
+
+from src.app.models.fruit import VendorInventory, Fruit
+from src.app.models.vendor import Vendor
 
 def get_all_vendors(db: Session, species: Optional[str] = None, offset: int = 0, limit: int = 10) -> List[Vendor]:
     query = db.query(Vendor)

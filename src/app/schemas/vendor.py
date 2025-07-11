@@ -1,5 +1,7 @@
-from pydantic import BaseModel
 from typing import List
+
+from pydantic import BaseModel
+
 from .fruit import VendorInventorySchema
 
 class VendorSchema(BaseModel):

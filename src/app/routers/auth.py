@@ -1,13 +1,20 @@
 from fastapi import APIRouter, Depends, HTTPException, status
-from sqlalchemy.orm import Session
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
+from sqlalchemy.orm import Session
 
+from src.app.auth import (
+    create_access_token,
+    create_refresh_token,
+    decode_refresh_token,
+    decode_token,
+    validate_password,
+    verify_password,
+)
+from src.app.crud.user import create_user, get_user_by_username
 from src.app.database import get_db
-from src.app.schemas.user import UserCreate, UserOut
-from src.app.schemas.auth import Token
-from src.app.crud.user import get_user_by_username, create_user
-from src.app.auth import verify_password, create_access_token, decode_token, create_refresh_token, decode_refresh_token, validate_password
 from src.app.models.vendor import Vendor
+from src.app.schemas.auth import Token
+from src.app.schemas.user import UserCreate, UserOut
 
 router = APIRouter()
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="auth/token")

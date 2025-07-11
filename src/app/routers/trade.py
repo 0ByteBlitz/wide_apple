@@ -1,12 +1,13 @@
 from fastapi import APIRouter, Depends, HTTPException, status
-from sqlalchemy.orm import Session
 from fastapi.security import OAuth2PasswordBearer
-from src.app.database import get_db
-from src.app.schemas.trade import TradeRequest
+from sqlalchemy.orm import Session
+
+from src.app.auth import decode_token
 from src.app.crud.trade import perform_trade
+from src.app.database import get_db
 from src.app.models.user import User
 from src.app.models.vendor import Vendor
-from src.app.auth import decode_token
+from src.app.schemas.trade import TradeRequest, TradeResponse
 
 router = APIRouter()
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="auth/token")
@@ -22,9 +23,10 @@ def get_current_user(token: str = Depends(oauth2_scheme), db: Session = Depends(
 
 @router.post(
     "/trade",
-    summary="Initiate a trade",
-    description="Initiate a trade from your vendor to another vendor. You can only trade from your own vendor.",
+    summary="Initiate a trade (send, request, buy, sell)",
+    description="Initiate a trade between vendors. Supports send, request, buy, and sell with alien currency.",
     tags=["Trade"],
+    response_model=TradeResponse,
     responses={
         200: {"description": "Trade completed successfully."},
         400: {"description": "Invalid trade request."},
@@ -45,8 +47,21 @@ def trade_route(request: TradeRequest, db: Session = Depends(get_db), current_us
             from_id=request.from_vendor_id,
             to_id=request.to_vendor_id,
             fruit_id=request.fruit_id,
-            quantity=request.quantity
+            quantity=request.quantity,
+            trade_type=request.trade_type,
+            currency_amount=request.currency_amount,
+            alien_currency=request.alien_currency
         )
-        return {"status": "success", "trade": result}
+        return TradeResponse(
+            status="success",
+            trade_type=request.trade_type,
+            from_vendor_id=request.from_vendor_id,
+            to_vendor_id=request.to_vendor_id,
+            fruit_id=request.fruit_id,
+            quantity=request.quantity,
+            currency_amount=result.get("currency_amount"),
+            alien_currency=request.alien_currency,
+            details=result
+        )
     except ValueError as e:
         raise HTTPException(status_code=400, detail=str(e))

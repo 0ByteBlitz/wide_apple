@@ -1,16 +1,20 @@
-from fastapi import APIRouter, Depends, Query, File, UploadFile, Form
+import os
+from pathlib import Path
+from typing import List, Optional
+from uuid import uuid4
+
+from fastapi import APIRouter, Depends, File, Form, Query, UploadFile
 from fastapi.responses import JSONResponse
 from sqlalchemy.orm import Session
+
 from src.app.database import get_db
-from src.app.crud.fruit import get_all_fruits, get_price_trend, get_historical_prices
-from src.app.schemas.fruit import FruitSchema, FruitPriceSchema, FruitPriceListSchema
-from typing import List, Optional
-import os
-from uuid import uuid4
+from src.app.crud.fruit import get_all_fruits, get_historical_prices, get_price_trend
 from src.app.models.fruit import Fruit
+from src.app.schemas.fruit import FruitPriceListSchema, FruitPriceSchema, FruitSchema
+
+FRUITS_DIR = Path(__file__).resolve().parent.parent / "static" / "fruits"
 
 router = APIRouter()
-
 
 @router.get(
     "/fruits",
@@ -39,7 +43,7 @@ async def create_fruit(
     dimension_origin: str = Form(...),
     rarity_level: int = Form(...),
     base_value: float = Form(...),
-    photo: UploadFile = File(None),
+    photo: UploadFile = File(...),
     db: Session = Depends(get_db)
 ):
     photo_url = None

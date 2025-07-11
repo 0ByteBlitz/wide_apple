@@ -1,7 +1,9 @@
 import { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, Link } from 'react-router-dom'
 import axios from 'axios'
-import AuthFormContainer from './AuthFormContainer'
+import AuthFormContainer from './common/AuthFormContainer'
+import loginBg from '../assets/wideapple_login_bg.png'
+import { BACKEND_URL } from '../constants';
 
 const passwordChecks = [
     {
@@ -54,7 +56,7 @@ const RegisterForm = () => {
         }
         try {
             await axios.post('/auth/register', { username, password }, {
-                baseURL: 'http://localhost:8000',
+                baseURL: BACKEND_URL,
             })
             setSuccess('Registration successful! Redirecting to login...')
             setTimeout(() => navigate('/login'), 1500)
@@ -66,7 +68,8 @@ const RegisterForm = () => {
     return (
         <AuthFormContainer
             title="Register"
-            footer={<span>Already have an account? <a href="/login" className="font-bold bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 bg-clip-text text-transparent hover:underline">Login</a></span>}
+            footer={<span>Already have an account? <Link to="/login" className="font-bold bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 bg-clip-text text-transparent hover:underline">Login</Link></span>}
+            bgImage={loginBg}
         >
             <form onSubmit={handleSubmit} className="w-full flex flex-col items-center">
                 {error && <div className="text-red-500 mb-4 font-semibold">{error}</div>}

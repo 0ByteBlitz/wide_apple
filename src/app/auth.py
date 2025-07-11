@@ -1,13 +1,13 @@
 import os
-
+import re
 from datetime import datetime, timedelta, UTC
+from typing import Optional
+
+from dotenv import load_dotenv
 from jose import JWTError, jwt
 from passlib.context import CryptContext
-from typing import Optional
-import re
 
 from src.app.schemas.auth import TokenData
-from dotenv import load_dotenv
 
 load_dotenv()
 

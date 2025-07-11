@@ -20,5 +20,16 @@ services:
     depends_on:
       - db
 
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    ports:
+      - "3000:80"
+    environment:
+      - VITE_API_URL=http://app:8000
+    depends_on:
+      - app
+
 volumes:
   postgres_data:

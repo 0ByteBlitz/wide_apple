@@ -4,6 +4,7 @@ import Dashboard from './pages/Dashboard'
 import LoginForm from './components/LoginForm'
 import RegisterForm from './components/RegisterForm'
 import NavBar from './components/NavBar'
+import Trade from './pages/Trade'
 
 function PrivateHome() {
   const isLoggedIn = !!localStorage.getItem('access_token')
@@ -17,6 +18,7 @@ function App() {
       <Routes>
         <Route path="/" element={<PrivateHome />} />
         <Route path="/dashboard" element={<Dashboard />} />
+        <Route path="/trade" element={<Trade />} />
         <Route path="/login" element={<LoginForm />} />
         <Route path="/register" element={<RegisterForm />} />
         <Route path="*" element={<Navigate to="/" />} />
